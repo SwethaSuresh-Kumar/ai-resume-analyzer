@@ -12,7 +12,7 @@ const Navbar = () => {
             <Link to="/upload" className="primary-button w-fit">
                 Upload Resume
             </Link>
-            <button onClick={auth.signOut}>Log out</button>
+            <button className="primary-button  w-fit" onClick={auth.signOut}>Log out</button>
         </nav>
     );
 };
