@@ -23,70 +23,74 @@ const Resume = () => {
     //     if(!isLoading && !auth.isAuthenticated) navigate(`/auth?next=/resume/${id}`);
     // }, [isLoading])
 
-    useEffect(() => {
-        let mounted = true;
+useEffect(() => {
+    let mounted = true;
+    let localResumeUrl = '';
+    let localImageUrl = '';
 
-        const loadResume = async () => {
+    const loadResume = async () => {
+        try {
+            const resume = await kv.get(`resume:${id}`);
+
+            if(!resume) {
+                if(mounted) setLoadError('Resume not found');
+                return;
+            }
+
+            const data = JSON.parse(resume);
+            console.log(data);
+
+            // Load resume PDF
             try {
-                const resume = await kv.get(`resume:${id}`);
+                const resumeBlob = await fs.read(data.resumePath);
+                if(!mounted) return;
 
-                if(!resume) {
-                    if(mounted) setLoadError('Resume not found');
-                    return;
-                }
-
-                const data = JSON.parse(resume);
-
-                // Load resume PDF
-                try {
-                    const resumeBlob = await fs.read(data.resumePath);
-                    if(!mounted) return;
-
-                    if(resumeBlob) {
-                        const pdfBlob = new Blob([resumeBlob], { type: 'application/pdf' });
-                        const resumeUrl = URL.createObjectURL(pdfBlob);
-                        setResumeUrl(resumeUrl);
-                    } else {
-                        console.warn('Failed to load PDF');
-                    }
-                } catch (error) {
-                    console.error('Error loading PDF:', error);
-                }
-
-                // Load image preview
-                try {
-                    const imageBlob = await fs.read(data.imagePath);
-                    if(!mounted) return;
-
-                    if(imageBlob) {
-                        const imgBlob = new Blob([imageBlob], { type: 'image/png' });
-                        const imageObjectUrl = URL.createObjectURL(imgBlob);
-                        setImageUrl(imageObjectUrl);
-                    } else {
-                        console.warn('Failed to load image preview');
-                    }
-                } catch (error) {
-                    console.error('Error loading image:', error);
-                }
-
-                if(mounted) {
-                    setFeedback(data.feedback);
-                    console.log({resumeUrl, imageUrl, feedback: data.feedback });
+                if(resumeBlob) {
+                    const pdfBlob = new Blob([resumeBlob], { type: 'application/pdf' });
+                    localResumeUrl = URL.createObjectURL(pdfBlob);
+                    setResumeUrl(localResumeUrl);
+                } else {
+                    console.warn('Failed to load PDF');
                 }
             } catch (error) {
-                console.error('Error loading resume:', error);
-                if(mounted) setLoadError('Failed to load resume data');
+                console.error('Error loading PDF:', error);
             }
+
+            // Load image preview
+            try {
+                const imageBlob = await fs.read(data.imagePath);
+                if(!mounted) return;
+
+                if(imageBlob) {
+                    const imgBlob = new Blob([imageBlob], { type: 'image/png' });
+                    localImageUrl = URL.createObjectURL(imgBlob);
+                    setImageUrl(localImageUrl);
+                } else {
+                    console.warn('Failed to load image preview');
+                }
+            } catch (error) {
+                console.error('Error loading image:', error);
+            }
+
+            if(mounted) {
+                setFeedback(data.feedback);
+                console.log({resumeUrl: localResumeUrl, imageUrl: localImageUrl, feedback: data.feedback });
+            }
+        } catch (error) {
+            console.error('Error loading resume:', error);
+            if(mounted) setLoadError('Failed to load resume data');
         }
+    }
 
-        loadResume();
+    loadResume();
 
-        return () => {
-            mounted = false;
-            if(resumeUrl) URL.revokeObjectURL(resumeUrl);
-            if(imageUrl) URL.revokeObjectURL(imageUrl);
-        };
-    }, [id, fs, kv]);
+    return () => {
+        mounted = false;
+        if(localResumeUrl) URL.revokeObjectURL(localResumeUrl);
+        if(localImageUrl) URL.revokeObjectURL(localImageUrl);
+    };
+}, [id, fs, kv]);
+
 
     if(loadError) {
         return (
