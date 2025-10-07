@@ -3,7 +3,7 @@ import {useEffect} from "react";
 import {useLocation, useNavigate} from "react-router";
 
 export const meta = () => ([
-    { title: 'Ai-Powered Resume Analyzer | Auth' },
+    { title: 'Resumind | Auth' },
     { name: 'description', content: 'Log into your account' },
 ])
 
@@ -14,7 +14,7 @@ const Auth = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        if(auth.isAuthenticated) navigate(next);
+        if(auth.isAuthenticated) navigate(next, {replace: true});
     }, [auth.isAuthenticated, next])
 
     return (

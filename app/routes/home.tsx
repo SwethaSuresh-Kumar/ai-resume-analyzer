@@ -7,7 +7,7 @@ import {useEffect, useState} from "react";
 
 export function meta({}: Route.MetaArgs) {
     return [
-        { title: "Ai-Powered Resume Analyzer" },
+        { title: "Resumind" },
         { name: "description", content: "Smart feedback for your dream job!" },
     ];
 }
@@ -18,9 +18,9 @@ export default function Home() {
     const [resumes, setResumes] = useState<Resume[]>([]);
     const [loadingResumes, setLoadingResumes] = useState(false);
 
-    useEffect(() => {
-        if(!auth.isAuthenticated) navigate('/auth?next=/');
-    }, [auth.isAuthenticated])
+    // useEffect(() => {
+    //     if(!auth.isAuthenticated) navigate('/auth?next=/');
+    // }, [auth.isAuthenticated])
 
     useEffect(() => {
         const loadResumes = async () => {

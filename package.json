@@ -3,7 +3,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "vite build",
+    "build": "react-router build",
     "dev": "react-router dev",
     "start": "react-router-serve ./build/server/index.js",
     "typecheck": "react-router typegen && tsc"
@@ -24,7 +24,6 @@
     "zustand": "^5.0.8"
   },
   "devDependencies": {
-    "@netlify/vite-plugin-react-router": "^1.0.1",
     "@react-router/dev": "^7.9.2",
     "@tailwindcss/vite": "^4.1.13",
     "@types/node": "^22",

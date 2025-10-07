@@ -19,9 +19,9 @@ const Resume = () => {
     const [loadError, setLoadError] = useState<string | null>(null);
     const navigate = useNavigate();
 
-    useEffect(() => {
-        if(!isLoading && !auth.isAuthenticated) navigate(`/auth?next=/resume/${id}`);
-    }, [isLoading])
+    // useEffect(() => {
+    //     if(!isLoading && !auth.isAuthenticated) navigate(`/auth?next=/resume/${id}`);
+    // }, [isLoading])
 
     useEffect(() => {
         let mounted = true;
