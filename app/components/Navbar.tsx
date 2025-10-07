@@ -4,6 +4,8 @@ import { usePuterStore } from '~/lib/puter';
 
 const Navbar = () => {
      const { auth } = usePuterStore();
+     const isAuthenticated = auth.isAuthenticated;
+     // console.log(isAuthenticated);
     return (
         <nav className="navbar">
             <Link to="/">
@@ -12,7 +14,20 @@ const Navbar = () => {
             <Link to="/upload" className="primary-button w-fit">
                 Upload Resume
             </Link>
-            <button className="primary-button  w-fit" onClick={auth.signOut}>Log out</button>
+            <button
+                className="primary-button w-fit"
+                onClick={async () => {
+                    if (isAuthenticated) {
+                        await auth.signOut();
+                    } else {
+                        await auth.signIn();
+                    }
+                    window.location.reload();
+                }}
+            >
+                {isAuthenticated ? "Log Out" : "Log In"}
+            </button>
+
         </nav>
     );
 };
