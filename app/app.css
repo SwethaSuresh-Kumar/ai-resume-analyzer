@@ -99,6 +99,9 @@ form {
     .navbar {
         @apply flex flex-row justify-between items-center bg-white rounded-full p-4 w-full px-10 max-w-[1200px] mx-auto;
     }
+   .burger-bar {
+    transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
+}
 
     .score-badge {
         @apply flex flex-row items-center justify-center py-1 px-2 gap-4 rounded-[96px];
